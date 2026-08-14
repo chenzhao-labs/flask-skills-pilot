@@ -637,9 +637,11 @@ class App(Scaffold):
         if provide_automatic_options is None:
             if "OPTIONS" not in methods and self.config["PROVIDE_AUTOMATIC_OPTIONS"]:
                 provide_automatic_options = True
-                required_methods.add("OPTIONS")
             else:
                 provide_automatic_options = False
+
+        if provide_automatic_options:
+            required_methods.add("OPTIONS")
 
         # Add the required methods now.
         methods |= required_methods
