@@ -89,6 +89,21 @@ def test_provide_automatic_options_attr():
     assert sorted(rv.allow) == ["OPTIONS"]
 
 
+def test_provide_automatic_options_attr_overrides_global_default():
+    app = flask.Flask(__name__)
+    app.config["PROVIDE_AUTOMATIC_OPTIONS"] = False
+
+    def index():
+        return "Hello World!"
+
+    index.provide_automatic_options = True
+    app.route("/")(index)
+
+    rv = app.test_client().open("/", method="OPTIONS")
+    assert rv.status_code == 200
+    assert sorted(rv.allow) == ["GET", "HEAD", "OPTIONS"]
+
+
 def test_provide_automatic_options_kwarg(app, client):
     def index():
         return flask.request.method

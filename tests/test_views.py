@@ -138,6 +138,23 @@ def test_view_provide_automatic_options_attr():
     assert "OPTIONS" in rv.allow
 
 
+def test_view_provide_automatic_options_attr_overrides_global_default():
+    app = flask.Flask(__name__)
+    app.config["PROVIDE_AUTOMATIC_OPTIONS"] = False
+
+    class Index(flask.views.View):
+        provide_automatic_options = True
+
+        def dispatch_request(self):
+            return "Hello World!"
+
+    app.add_url_rule("/", view_func=Index.as_view("index"))
+
+    rv = app.test_client().open("/", method="OPTIONS")
+    assert rv.status_code == 200
+    assert sorted(rv.allow) == ["GET", "HEAD", "OPTIONS"]
+
+
 def test_implicit_head(app, client):
     class Index(flask.views.MethodView):
         def get(self):
