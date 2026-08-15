@@ -1,5 +1,6 @@
 .idea/
 .vscode/
+.worktrees/
 __pycache__/
 dist/
 .coverage*
